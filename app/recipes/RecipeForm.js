@@ -11,6 +11,16 @@ const linesToList = (value) => {
     .filter(Boolean);
 };
 
+const createUniqueRecipeId = (title) => {
+  const recipeId = createRecipeId(title);
+  const token =
+    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID().slice(0, 8)
+      : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+
+  return `${recipeId}-${token}`;
+};
+
 const RecipeForm = () => {
   const router = useRouter();
   const [status, setStatus] = useState("");
@@ -27,7 +37,7 @@ const RecipeForm = () => {
     }
 
     const recipe = saveRecipe({
-      id: createRecipeId(title),
+      id: createUniqueRecipeId(title),
       title,
       time: formData.get("time"),
       servings: formData.get("servings"),
